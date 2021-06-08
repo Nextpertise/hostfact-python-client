@@ -1,0 +1,136 @@
+interactions:
+- request:
+    body: api_key=secret&controller=invoice&action=add&DebtorCode=DB100&InvoiceLines%5B0%5D%5BDescription%5D=test%40test.nl&InvoiceLines%5B0%5D%5BPriceExcl%5D=2222
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - your-hostfact-server.com
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://your-hostfact-server.com/Pro/api.php
+  response:
+    body:
+      string: '{"controller":"invoice","action":"add","status":"success","date":"2021-06-18T14:46:53+02:00","invoice":{"Identifier":"9300","InvoiceCode":"[concept]0012","Debtor":"1","DebtorCode":"DB100","Status":"0","SubStatus":"","Date":"2021-06-18","Term":"0","PayBefore":"2021-06-18","PaymentURL":"","AmountExcl":"2222.00","AmountTax":"466.62","AmountIncl":"2688.62","TaxRate":0,"Compound":"no","AmountPaid":"0.00","Discount":0,"VatCalcMethod":"excl","IgnoreDiscount":"no","Coupon":"","ReferenceNumber":"","CompanyName":"DB100","TaxNumber":"","Sex":"m","Initials":"D.","SurName":"Code","Address":"Address","ZipCode":"1000AA","City":"Amsterdam","Country":"NL","EmailAddress":"info@db100.nl","InvoiceMethod":"0","Template":"38","ScheduledAt":"","SentDate":"","Sent":"0","Reminders":"0","ReminderDate":"","Summations":"0","SummationDate":"","Authorisation":"no","PaymentMethod":"","PayDate":"","TransactionID":"","Description":"","Comment":"","InvoiceLines":[{"Identifier":318661,"Date":"2021-06-18","Number":"1","NumberSuffix":"","ProductCode":"","Description":"test@test.nl","PriceExcl":"2222","DiscountPercentage":0,"DiscountPercentageType":"line","TaxPercentage":21,"PeriodicID":"0","Periods":"1","Periodic":"","StartPeriod":"","EndPeriod":"","ProductType":"","Reference":"0","NoDiscountAmountIncl":2688.62,"NoDiscountAmountExcl":2222,"DiscountAmountIncl":0,"DiscountAmountExcl":0}],"Created":"2021-06-18
+        14:46:53","Modified":"2021-06-18 14:46:53","Translations":{"Status":"Concept","Country":"Nederland","InvoiceMethod":"Per
+        e-mail","Template":"NL - Default Invoice","PaymentMethod":""},"AmountDiscount":0,"AmountDiscountIncl":0,"UsedTaxrates":{"0.21":{"AmountExcl":2222,"AmountTax":466.62,"AmountIncl":2688.62}}}}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: api_key=secret&controller=attachment&action=add&InvoiceCode=%5Bconcept%5D0012&Type=invoice&Filename=test.txt&Base64=b%27SGVsbG8gd29ybGQ%3D%27
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - your-hostfact-server.com
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://your-hostfact-server.com/Pro/api.php
+  response:
+    body:
+      string: '{"controller":"attachment","action":"add","status":"success","date":"2021-06-18T14:46:54+02:00","success":["Het
+        bestand ''test.txt'' is toegevoegd als bijlage bij de factuur"]}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: api_key=secret&controller=invoice&action=show&Identifier=9300
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - your-hostfact-server.com
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://your-hostfact-server.com/Pro/api.php
+  response:
+    body:
+      string: '{"controller":"invoice","action":"show","status":"success","date":"2021-06-18T14:46:55+02:00","invoice":{"Identifier":"9300","InvoiceCode":"[concept]0012","Debtor":"1","DebtorCode":"DB100","Status":"0","SubStatus":"","Date":"2021-06-18","Term":"0","PayBefore":"2021-06-18","PaymentURL":"","AmountExcl":"2222.00","AmountTax":"466.62","AmountIncl":"2688.62","TaxRate":0,"Compound":"no","AmountPaid":"0.00","Discount":0,"VatCalcMethod":"excl","IgnoreDiscount":"no","Coupon":"","ReferenceNumber":"","CompanyName":"DB100","TaxNumber":"","Sex":"m","Initials":"D.","SurName":"Code","Address":"Address","ZipCode":"1000AA","City":"Amsterdam","Country":"NL","EmailAddress":"info@db100.nl","InvoiceMethod":"0","Template":"38","ScheduledAt":"","SentDate":"","Sent":"0","Reminders":"0","ReminderDate":"","Summations":"0","SummationDate":"","Authorisation":"no","PaymentMethod":"","PayDate":"","TransactionID":"","Description":"","Comment":"","InvoiceLines":[{"Identifier":318661,"Date":"2021-06-18","Number":"1","NumberSuffix":"","ProductCode":"","Description":"test@test.nl","PriceExcl":"2222","DiscountPercentage":0,"DiscountPercentageType":"line","TaxPercentage":21,"PeriodicID":"0","Periods":"1","Periodic":"","StartPeriod":"","EndPeriod":"","ProductType":"","Reference":"0","NoDiscountAmountIncl":2688.62,"NoDiscountAmountExcl":2222,"DiscountAmountIncl":0,"DiscountAmountExcl":0}],"Created":"2021-06-18
+        14:46:53","Modified":"2021-06-18 14:46:53","Attachments":[{"Identifier":"49","Filename":"test.txt"}],"Translations":{"Status":"Concept","Country":"Nederland","InvoiceMethod":"Per
+        e-mail","Template":"NL - Default Invoice","PaymentMethod":""},"AmountDiscount":0,"AmountDiscountIncl":0,"UsedTaxrates":{"0.21":{"AmountExcl":2222,"AmountTax":466.62,"AmountIncl":2688.62}}}}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: api_key=secret&controller=invoice&action=list&DebtorCode=DB100&Status=0&sort=Modified
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - your-hostfact-server.com
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://your-hostfact-server.com/Pro/api.php
+  response:
+    body:
+      string: '{"controller":"invoice","action":"list","status":"success","date":"2021-06-18T14:46:56+02:00","totalresults":12,"currentresults":12,"offset":0,"filters":{"sort":"Modified"},"invoices":[{"Identifier":"9300","InvoiceCode":"[concept]0012","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"2222.00","AmountIncl":"2688.62","AmountOpen":0,"Date":"2021-06-18","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-18
+        14:46:53"},{"Identifier":"9289","InvoiceCode":"[concept]0001","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"165.00","AmountIncl":"199.65","AmountOpen":0,"Date":"2021-06-17","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-17
+        12:25:46"}]}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: api_key=secret&controller=invoiceline&action=add&Identifier=9300&InvoiceLines%5B0%5D%5BDescription%5D=Big+money&InvoiceLines%5B0%5D%5BPriceExcl%5D=5000
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - your-hostfact-server.com
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://your-hostfact-server.com/Pro/api.php
+  response:
+    body:
+      string: '{"controller":"invoiceline","action":"add","status":"success","date":"2021-06-18T14:46:57+02:00","success":["Er
+        zijn 1 factuurregels toegevoegd"],"invoice":{"Identifier":"9300","InvoiceCode":"[concept]0012","Debtor":"1","DebtorCode":"DB100","Status":"0","SubStatus":"","Date":"2021-06-18","Term":"0","PayBefore":"2021-06-18","PaymentURL":"","AmountExcl":"7222.00","AmountTax":"1516.62","AmountIncl":"8738.62","TaxRate":0,"Compound":"no","AmountPaid":"0.00","Discount":0,"VatCalcMethod":"excl","IgnoreDiscount":"no","Coupon":"","ReferenceNumber":"","CompanyName":"DB100","TaxNumber":"","Sex":"m","Initials":"D.","SurName":"Code","Address":"Address","ZipCode":"1000AA","City":"Amsterdam","Country":"NL","EmailAddress":"info@db100.nl","InvoiceMethod":"0","Template":"38","ScheduledAt":"","SentDate":"","Sent":"0","Reminders":"0","ReminderDate":"","Summations":"0","SummationDate":"","Authorisation":"no","PaymentMethod":"","PayDate":"","TransactionID":"","Description":"","Comment":"","InvoiceLines":[{"Identifier":318661,"Date":"2021-06-18","Number":"1","NumberSuffix":"","ProductCode":"","Description":"test@test.nl","PriceExcl":"2222","DiscountPercentage":0,"DiscountPercentageType":"line","TaxPercentage":21,"PeriodicID":"0","Periods":"1","Periodic":"","StartPeriod":"","EndPeriod":"","ProductType":"","Reference":"0","NoDiscountAmountIncl":2688.62,"NoDiscountAmountExcl":2222,"DiscountAmountIncl":0,"DiscountAmountExcl":0},{"Identifier":318662,"Date":"2021-06-18","Number":"1","NumberSuffix":"","ProductCode":"","Description":"Big
+        money","PriceExcl":"5000","DiscountPercentage":0,"DiscountPercentageType":"line","TaxPercentage":21,"PeriodicID":"0","Periods":"1","Periodic":"","StartPeriod":"","EndPeriod":"","ProductType":"","Reference":"0","NoDiscountAmountIncl":6050,"NoDiscountAmountExcl":5000,"DiscountAmountIncl":0,"DiscountAmountExcl":0}],"Created":"2021-06-18
+        14:46:53","Modified":"2021-06-18 14:46:57","Attachments":[{"Identifier":"49","Filename":"test.txt"}],"Translations":{"Status":"Concept","Country":"Nederland","InvoiceMethod":"Per
+        e-mail","Template":"NL - Default Invoice","PaymentMethod":""},"AmountDiscount":0,"AmountDiscountIncl":0,"UsedTaxrates":{"0.21":{"AmountExcl":7222,"AmountTax":1516.62,"AmountIncl":8738.62}}}}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: api_key=secret&controller=invoice&action=show&Identifier=9300
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - your-hostfact-server.com
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://your-hostfact-server.com/Pro/api.php
+  response:
+    body:
+      string: '{"controller":"invoice","action":"show","status":"success","date":"2021-06-18T14:46:57+02:00","invoice":{"Identifier":"9300","InvoiceCode":"[concept]0012","Debtor":"1","DebtorCode":"DB100","Status":"0","SubStatus":"","Date":"2021-06-18","Term":"0","PayBefore":"2021-06-18","PaymentURL":"","AmountExcl":"7222.00","AmountTax":"1516.62","AmountIncl":"8738.62","TaxRate":0,"Compound":"no","AmountPaid":"0.00","Discount":0,"VatCalcMethod":"excl","IgnoreDiscount":"no","Coupon":"","ReferenceNumber":"","CompanyName":"DB100","TaxNumber":"","Sex":"m","Initials":"D.","SurName":"Code","Address":"Address","ZipCode":"1000AA","City":"Amsterdam","Country":"NL","EmailAddress":"info@db100.nl","InvoiceMethod":"0","Template":"38","ScheduledAt":"","SentDate":"","Sent":"0","Reminders":"0","ReminderDate":"","Summations":"0","SummationDate":"","Authorisation":"no","PaymentMethod":"","PayDate":"","TransactionID":"","Description":"","Comment":"","InvoiceLines":[{"Identifier":318661,"Date":"2021-06-18","Number":"1","NumberSuffix":"","ProductCode":"","Description":"test@test.nl","PriceExcl":"2222","DiscountPercentage":0,"DiscountPercentageType":"line","TaxPercentage":21,"PeriodicID":"0","Periods":"1","Periodic":"","StartPeriod":"","EndPeriod":"","ProductType":"","Reference":"0","NoDiscountAmountIncl":2688.62,"NoDiscountAmountExcl":2222,"DiscountAmountIncl":0,"DiscountAmountExcl":0},{"Identifier":318662,"Date":"2021-06-18","Number":"1","NumberSuffix":"","ProductCode":"","Description":"Big
+        money","PriceExcl":"5000","DiscountPercentage":0,"DiscountPercentageType":"line","TaxPercentage":21,"PeriodicID":"0","Periods":"1","Periodic":"","StartPeriod":"","EndPeriod":"","ProductType":"","Reference":"0","NoDiscountAmountIncl":6050,"NoDiscountAmountExcl":5000,"DiscountAmountIncl":0,"DiscountAmountExcl":0}],"Created":"2021-06-18
+        14:46:53","Modified":"2021-06-18 14:46:57","Attachments":[{"Identifier":"49","Filename":"test.txt"}],"Translations":{"Status":"Concept","Country":"Nederland","InvoiceMethod":"Per
+        e-mail","Template":"NL - Default Invoice","PaymentMethod":""},"AmountDiscount":0,"AmountDiscountIncl":0,"UsedTaxrates":{"0.21":{"AmountExcl":7222,"AmountTax":1516.62,"AmountIncl":8738.62}}}}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,0 +1,25 @@
+interactions:
+- request:
+    body: api_key=secret&controller=invoice&action=list
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - your-hostfact-server.com
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://your-hostfact-server.com/Pro/api.php
+  response:
+    body:
+      string: '{"controller":"invoice","action":"list","status":"success","date":"2021-06-18T14:23:45+02:00","totalresults":3,"currentresults":3,"offset":0,"invoices":[{"Identifier":"9297","InvoiceCode":"[concept]0009","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"4444.00","AmountIncl":"5377.24","AmountOpen":0,"Date":"2021-06-18","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-18
+        13:13:19"},{"Identifier":"9296","InvoiceCode":"[concept]0008","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"1111.00","AmountIncl":"1344.31","AmountOpen":0,"Date":"2021-06-18","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-18
+        12:53:40"},{"Identifier":"9295","InvoiceCode":"[concept]0007","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"16433.00","AmountIncl":"19883.93","AmountOpen":0,"Date":"2021-06-17","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-18
+        12:39:03"}]}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1

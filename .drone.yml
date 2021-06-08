@@ -1,0 +1,17 @@
+---
+kind: pipeline
+type: docker
+name: backend
+
+steps:
+- name: run tests
+  image: registry.nextpertise.tools/common/uvicorn-fastapi-poetry
+  commands:
+  - poetry update
+  - cd tests
+  - poetry run pytest
+
+trigger:
+  event:
+    exclude:
+    - pull_request
