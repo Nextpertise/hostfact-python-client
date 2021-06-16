@@ -3,10 +3,6 @@ import sys
 import requests
 
 
-BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_PATH)
-
-
 def send_request(url, **kwargs):  
     response = requests.post(url=url, timeout=10, verify=False, data=kwargs)
     return response.content.decode("UTF-8")
