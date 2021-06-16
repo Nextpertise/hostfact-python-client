@@ -3,15 +3,27 @@ import sys
 import requests
 
 
-from collections import namedtuple
-
-
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_PATH)
 
 
-from modules.invoice import Invoice
-from modules.debtor import Debtor
+def send_request(url, **kwargs):  
+    response = requests.post(url=url, timeout=10, verify=False, data=kwargs)
+    return response.content.decode("UTF-8")
+
+
+class Method(object):
+    def __init__(self, url, api_key, controller):      
+        self.url = url
+        self.api_key = api_key
+        self.controller = controller
+
+    def call(self, **kwargs):
+        return send_request(url=self.url, api_key=self.api_key, controller=self.controller, action=self.name, **kwargs)
+
+    def __getattr__(self, name):
+        self.name = name
+        return self.call
 
 
 class HostFact(object):
@@ -19,22 +31,7 @@ class HostFact(object):
         self.url = url
         self.api_key = api_key
 
-        self.invoice = Invoice(self.url, self.api_key)
-        self.debtor = Debtor(self.url, self.api_key)
 
-    def call(self, controller, action, **kwargs):
-        response = requests.post(url=self.url, timeout=10, verify=False, data={
-            "api_key": self.api_key,
-            "controller": controller,
-            "action": action,
-            **kwargs
-        })
-        return response.content.decode("UTF-8")
-
-    # def call(self, controller, action, params=None):
-    #     args = {
-    #         'api_key': self.api_key,
-    #         'controller': controller,
-    #         'action': action
-    #     }
+    def __getattr__(self, name):
+        return Method(self.url, self.api_key, controller=name)
         
