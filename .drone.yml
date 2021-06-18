@@ -9,3 +9,8 @@ steps:
   - poetry update
   - cd tests
   - poetry run pytest
+
+trigger:
+  event:
+    exclude:
+    - pull_request
