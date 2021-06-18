@@ -28,8 +28,8 @@ def test_invoice_list_http_request():
         "action": "list",
         "status": "success",
         "date": "2021-06-18T14:23:45+02:00",
-        "totalresults": 9,
-        "currentresults": 9,
+        "totalresults": 3,
+        "currentresults": 3,
         "offset": 0,
         "invoices": [
             {
