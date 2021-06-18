@@ -1,13 +1,11 @@
 ---
 kind: pipeline
-type: ssh
+type: docker
 name: backend
 
 server:
   host: ci-runner1.nextpertise.nl
   user: runner
-  ssh_key:
-    from_secret: runner_rsa
 
 steps:
 - name: run tests
@@ -15,5 +13,3 @@ steps:
   - poetry update
   - cd tests
   - poetry run pytest
-  environment:
-    DOCKER_CONFIG: /home/runner/.docker
