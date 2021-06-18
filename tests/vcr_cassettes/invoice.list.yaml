@@ -1,0 +1,47 @@
+interactions:
+- request:
+    body: api_key=secret&controller=invoice&action=list
+    headers:
+      Connection:
+      - close
+      Content-Length:
+      - '62'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Host:
+      - cptest1.nextpertise.nl
+      User-Agent:
+      - Python-urllib/3.8
+    method: POST
+    uri: https://localhost
+  response:
+    body:
+      string: '{"controller":"invoice","action":"list","status":"success","date":"2021-06-18T14:23:45+02:00","totalresults":9,"currentresults":9,"offset":0,"invoices":[{"Identifier":"9297","InvoiceCode":"[concept]0009","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"4444.00","AmountIncl":"5377.24","AmountOpen":0,"Date":"2021-06-18","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-18
+        13:13:19"},{"Identifier":"9296","InvoiceCode":"[concept]0008","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"1111.00","AmountIncl":"1344.31","AmountOpen":0,"Date":"2021-06-18","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-18
+        12:53:40"},{"Identifier":"9295","InvoiceCode":"[concept]0007","Debtor":"1","DebtorCode":"DB100","CompanyName":"DB100","Initials":"D.","SurName":"Code","AmountExcl":"16433.00","AmountIncl":"19883.93","AmountOpen":0,"Date":"2021-06-17","Status":"0","SubStatus":"","Authorisation":"no","Modified":"2021-06-18
+        12:39:03"}]}'
+    headers:
+      Cache-Control:
+      - no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+      Connection:
+      - close
+      Content-Length:
+      - '2890'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 18 Jun 2021 12:23:45 GMT
+      Expires:
+      - Thu, 19 Nov 1981 08:52:00 GMT
+      Pragma:
+      - no-cache
+      Server:
+      - Apache/2.4.10
+      Set-Cookie:
+      - wfhbf00a7a9e=187nb0okjl9jist4jo45u4gu56; path=/; secure; HttpOnly
+      X-Powered-By:
+      - PHP/5.6.38-0+deb8u1
+    status:
+      code: 200
+      message: OK
+version: 1

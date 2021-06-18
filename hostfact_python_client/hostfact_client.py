@@ -1,45 +1,15 @@
 import json
+import urllib.request
+import os, sys
 
-import urllib.parse, urllib.request
-
-
-def http_build_query(data):
-    '''http_build_query() emulates the PHP function of the same name.
-    `data` can be list or dict containing nested lists or dicts of any depth.
-    The output is an url encoded string that can be posted using the
-    application/x-www-form-urlencoded format.
-    '''
-    parents = list()
-    pairs = dict()
-
-    def renderKey(parents):
-        depth, out = 0, ''
-        for x in parents:
-            s = "[%s]" if depth > 0 or isinstance(x, int) else "%s"
-            out += s % str(x)
-            depth += 1
-        return out
-
-    def r_urlencode(data):
-        if isinstance(data, list) or isinstance(data, tuple):
-            for i in range(len(data)):
-                parents.append(i)
-                r_urlencode(data[i])
-                parents.pop()
-        elif isinstance(data, dict):
-            for key, value in data.items():
-                parents.append(key)
-                r_urlencode(value)
-                parents.pop()
-        else:
-            pairs[renderKey(parents)] = str(data)
-
-        return pairs
-
-    return urllib.parse.urlencode(r_urlencode(data))
+BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_PATH)
 
 
-class Method(object):
+from hostfact_python_client.utilities import http_build_query
+
+
+class HostFactCall(object):
     def __init__(self, url, api_key, controller=None):      
         self.url = url
         self.api_key = api_key
@@ -58,18 +28,16 @@ class Method(object):
                 reply = f.read()
             reply = json.loads(reply.decode('utf-8'))
         except Exception as e:
-            print(f"WeFact error: {e}")
+            print(f"HostFact error: {e}")
             raise
 
         if reply['status'] == 'error':
-            print(f"WeFact error: {reply}")
-            raise Exception(f"WeFact error: {reply['errors']}" if 'errors' in reply.keys() else Exception("WeFact error."))
+            print(f"HostFact error: {reply}")
+            raise Exception(f"HostFact error: {reply['errors']}" if 'errors' in reply.keys() else Exception("HostFact error."))
         return reply
 
     def make_invoice(self, debtor_code, invoice_lines, newInvoice=False, attachment=None):
-        method = Method(self.url, self.api_key, 'invoice')
-
-        attachment_method = Method(self.url, self.api_key, 'attachment')
+        method = HostFactCall(self.url, self.api_key, 'invoice')
 
         active_invoices = []
 
@@ -79,15 +47,21 @@ class Method(object):
         if newInvoice or (not newInvoice and active_invoices['totalresults'] == 0):
             invoice_reply = method.add(DebtorCode=debtor_code, InvoiceLines=invoice_lines)
         else:
-            invoice_reply = method.edit(Identifier=active_invoices['invoices'][0]['Identifier'], InvoiceLines=invoice_lines)
-
+            invoice_line_method = HostFactCall(self.url, self.api_key, 'invoiceline')
+            invoice_reply = invoice_line_method.add(Identifier=active_invoices['invoices'][0]['Identifier'], InvoiceLines=invoice_lines)
 
         if attachment:
+            attachment_method = HostFactCall(self.url, self.api_key, 'attachment')
             attachment_method.add(InvoiceCode=invoice_reply['invoice']['InvoiceCode'], Type='invoice', Filename=attachment['name'], Base64=attachment['content'])
+
+        return {"Identifier": invoice_reply['invoice']['Identifier']}
 
     def __getattr__(self, name):
         if name == "make_invoice":
-            return self.make_invoice
+            if self.controller == "invoice":
+                return self.make_invoice
+            else:
+                raise Exception("make_invoice only allowed for 'invoice' controller")
         self.name = name
         return self.call
 
@@ -96,7 +70,7 @@ class HostFact(object):
     def __init__(self, url, api_key):      
         self.url = url
         self.api_key = api_key
-        self.method = Method(self.url, self.api_key)
+        self.method = HostFactCall(self.url, self.api_key)
 
 
     def __getattr__(self, name):
