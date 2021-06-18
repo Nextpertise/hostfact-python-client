@@ -3,10 +3,6 @@ kind: pipeline
 type: docker
 name: backend
 
-server:
-  host: ci-runner1.nextpertise.nl
-  user: runner
-
 steps:
 - name: run tests
   commands:
