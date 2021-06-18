@@ -5,9 +5,10 @@ name: backend
 
 steps:
 - name: run tests
-  image: registry.nextpertise.tools/common/uvicorn-fastapi-poetry
+  image: python:3.8
   commands:
-  - poetry update
+  - pip install poetry
+  - poetry install
   - cd tests
   - poetry run pytest
 
