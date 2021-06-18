@@ -6,6 +6,8 @@ name: backend
 server:
   host: ci-runner1.nextpertise.nl
   user: runner
+  ssh_key:
+    from_secret: runner_rsa
 
 steps:
 - name: run tests
