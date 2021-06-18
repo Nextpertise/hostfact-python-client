@@ -6,7 +6,7 @@ from hostfact_python_client.utilities import http_build_query
 from hostfact_python_client.hostfact_client import HostFact
 
 
-client = HostFact(url="https://localhost", api_key="secret")
+client = HostFact(url="https://localhost/api.php", api_key="secret")
 
 
 def test_invoice_list_http_build_query():
