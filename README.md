@@ -41,11 +41,11 @@ client = HostFact(url="your host fact address", api_key="your_secret")
 # Read from file
 with open("test.txt", "rb") as my_file:
     filename = my_file.name
-    attachment = base64.b64encode(my_file.read())
+    attachment = base64.b64encode(my_file.read()).decode("utf-8")
 
 # Updload string
 # filename = "test.txt"
-# attachment = base64.b64encode("Hello world".encode())
+# attachment = base64.b64encode("Hello world".encode()).decode("utf-8")
 
 
 client.invoice.make_invoice(**{
@@ -167,11 +167,11 @@ client = HostFact(url="your host fact address", api_key="your_secret")
 # Read from file
 with open("test.txt", "rb") as my_file:
     filename = my_file.name
-    attachment = base64.b64encode(my_file.read())
+    attachment = base64.b64encode(my_file.read()).decode("utf-8")
 
 # Updload string
 # filename = "test.txt"
-# attachment = base64.b64encode("Hello world".encode())
+# attachment = base64.b64encode("Hello world".encode()).decode("utf-8")
 
 
 client.attachment.add(**{
