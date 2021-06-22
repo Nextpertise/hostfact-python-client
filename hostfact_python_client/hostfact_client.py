@@ -24,7 +24,7 @@ class HostFactCall(object):
         }
         try:
             d = http_build_query(data).encode('ascii')
-            with urllib.request.urlopen(self.url, d, timeout=2) as f:
+            with urllib.request.urlopen(self.url, d, timeout=30) as f:
                 reply = f.read()
             reply = json.loads(reply.decode('utf-8'))
         except Exception as e:
