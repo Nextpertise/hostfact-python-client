@@ -42,7 +42,7 @@ class HostFactCall(object):
         active_invoices = []
 
         if not newInvoice:
-            active_invoices = method.list(DebtorCode=debtor_code, Status=0, sort="Modified")
+            active_invoices = method.list(searchat="DebtorCode", searchfor=debtor_code, status=0, sort="Modified")
 
         if newInvoice or (not newInvoice and active_invoices['totalresults'] == 0):
             invoice_reply = method.add(DebtorCode=debtor_code, InvoiceLines=invoice_lines)
