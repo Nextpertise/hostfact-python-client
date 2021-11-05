@@ -10,10 +10,11 @@ from hostfact_python_client.utilities import http_build_query
 
 
 class HostFactCall(object):
-    def __init__(self, url, api_key, controller=None):      
+    def __init__(self, url, api_key, controller=None, debug=False):      
         self.url = url
         self.api_key = api_key
         self.controller = controller
+        self.debug = debug
 
     def call(self, **kwargs):
         data={
@@ -28,16 +29,18 @@ class HostFactCall(object):
                 reply = f.read()
             reply = json.loads(reply.decode('utf-8'))
         except Exception as e:
-            print(f"HostFact error: {e}")
+            if self.debug:
+                print(f"HostFact error: {e}")
             raise
 
         if reply['status'] == 'error':
-            print(f"HostFact error: {reply}")
+            if self.debug:
+                print(f"HostFact error: {reply}")
             raise Exception(f"HostFact error: {reply['errors']}" if 'errors' in reply.keys() else Exception("HostFact error."))
         return reply
 
     def make_invoice(self, debtor_code, invoice_lines, newInvoice=False, attachment=None):
-        method = HostFactCall(self.url, self.api_key, 'invoice')
+        method = HostFactCall(self.url, self.api_key, 'invoice', self.debug)
 
         active_invoices = []
 
@@ -47,11 +50,11 @@ class HostFactCall(object):
         if newInvoice or (not newInvoice and active_invoices['totalresults'] == 0):
             invoice_reply = method.add(DebtorCode=debtor_code, InvoiceLines=invoice_lines)
         else:
-            invoice_line_method = HostFactCall(self.url, self.api_key, 'invoiceline')
+            invoice_line_method = HostFactCall(self.url, self.api_key, 'invoiceline', self.debug)
             invoice_reply = invoice_line_method.add(Identifier=active_invoices['invoices'][0]['Identifier'], InvoiceLines=invoice_lines)
 
         if attachment:
-            attachment_method = HostFactCall(self.url, self.api_key, 'attachment')
+            attachment_method = HostFactCall(self.url, self.api_key, 'attachment', self.debug)
             attachment_method.add(InvoiceCode=invoice_reply['invoice']['InvoiceCode'], Type='invoice', Filename=attachment['name'], Base64=attachment['content'])
 
         return {"Identifier": invoice_reply['invoice']['Identifier']}
@@ -67,10 +70,10 @@ class HostFactCall(object):
 
 
 class HostFact(object):
-    def __init__(self, url, api_key):      
+    def __init__(self, url, api_key, debug=False):      
         self.url = url
         self.api_key = api_key
-        self.method = HostFactCall(self.url, self.api_key)
+        self.method = HostFactCall(self.url, self.api_key, debug=debug)
 
 
     def __getattr__(self, name):
