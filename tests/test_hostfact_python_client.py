@@ -1,13 +1,32 @@
 import vcr
 import base64
 import pytest
-
+import httpx
 from hostfact_python_client.utilities import http_build_query
-
 from hostfact_python_client.hostfact_client import HostFact
 
 
-client = HostFact(url="https://your-hostfact-server.com/Pro/apiv2/api.php", api_key="secret")
+class HTTPXTransport:
+    @staticmethod
+    def request(url: str, data: dict):
+        # Use httpx.request to send the request
+        response = httpx.request("POST", url, data=data)
+
+        # Return the response
+        return response
+
+
+# Set up the mocked transport
+transport = HTTPXTransport()
+
+# Clients
+transport_client = HostFact(url="https://your-hostfact-server.com/Pro/apiv2/api.php",
+                            api_key="secret", transport=transport)
+transport_client_invalid_api_key = HostFact(url="https://your-hostfact-server.com/Pro/apiv2/api.php",
+                                            api_key="wrong_secret", transport=transport)
+native_client = HostFact(url="https://your-hostfact-server.com/Pro/apiv2/api.php", api_key="secret")
+native_client_invalid_api_key = HostFact(url="https://your-hostfact-server.com/Pro/apiv2/api.php",
+                                         api_key="wrong_secret")
 
 
 def test_invoice_list_http_build_query():
@@ -20,9 +39,9 @@ def test_invoice_list_http_build_query():
     assert (result == "action=list&controller=invoice&sort=Modified")
 
 
+@pytest.mark.parametrize("client", [native_client, transport_client])
 @vcr.use_cassette('tests/vcr_cassettes/invoice.list.yaml')
-def test_invoice_list_http_request():
-    
+def test_invoice_list_http_request(client):
     result = client.invoice.list()
 
     assert (result == {
@@ -89,12 +108,13 @@ def test_invoice_list_http_request():
     })
 
 
+@pytest.mark.parametrize("client", [native_client, transport_client])
 @vcr.use_cassette('tests/vcr_cassettes/invoice.make_invoice.yaml')
-def test_make_invoice_http_request():
+def test_make_invoice_http_request(client):
 
     filename = "test.txt"
     attachment = base64.b64encode("Hello world".encode())
-    
+
     result = client.invoice.make_invoice(**{
         "debtor_code": "DB100",
         "invoice_lines": [
@@ -215,8 +235,9 @@ def test_make_invoice_http_request():
     ])
 
 
+@pytest.mark.parametrize("client", [native_client_invalid_api_key, transport_client_invalid_api_key])
 @vcr.use_cassette('tests/vcr_cassettes/failed_invoice.list.yaml')
-def test_with_incorrect_api_key_http_request():
+def test_with_incorrect_api_key_http_request(client):
     with pytest.raises(Exception) as exc_info:
         client.invoice.list()
     assert str(exc_info.value) == "HostFact error: ['API key is invalid']"

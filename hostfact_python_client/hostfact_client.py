@@ -1,39 +1,50 @@
 import json
 import urllib.request
-import os, sys
+import os
+import sys
+from typing import Optional, Callable
+from hostfact_python_client.utilities import http_build_query
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_PATH)
 
 
-from hostfact_python_client.utilities import http_build_query
-
-
 class HostFactCall(object):
-    def __init__(self, url, api_key, controller=None, timeout=30, debug=False):
+    def __init__(self, url: str,
+                 api_key: str,
+                 controller: Optional[str] = None,
+                 transport: Optional[Callable] = None,
+                 timeout: int = 30,
+                 debug: bool = False):
         self.url = url
         self.api_key = api_key
         self.controller = controller
+        self.transport = transport
         self.timeout = timeout
         self.debug = debug
 
     def call(self, **kwargs):
-        data={
+        data = {
             "api_key": self.api_key,
             "controller": self.controller,
             "action": self.name,
             **kwargs
         }
-        try:
-            d = http_build_query(data).encode('ascii')
-            with urllib.request.urlopen(self.url, d, timeout=self.timeout) as f:
-                reply = f.read()
-            reply = json.loads(reply.decode('utf-8'))
-        except Exception as e:
-            if self.debug:
-                error = f"HostFact error: {e}, {e.file.data.decode()}"
-                print(error)
-            raise Exception(error) from e
+        if self.transport:
+            # Use the provided transport to make the HTTP request
+            response = self.transport.request(self.url, data)
+            reply = response.json()
+        else:
+            try:
+                d = http_build_query(data).encode('ascii')
+                with urllib.request.urlopen(self.url, d, timeout=self.timeout) as f:
+                    reply = f.read()
+                reply = json.loads(reply.decode('utf-8'))
+            except Exception as e:
+                if self.debug:
+                    error = f"HostFact error: {e}, {e.file.data.decode()}"
+                    print(error)
+                raise Exception(error) from e
 
         if reply['status'] == 'error':
             if self.debug:
@@ -41,7 +52,11 @@ class HostFactCall(object):
             raise Exception(f"HostFact error: {reply['errors']}" if 'errors' in reply.keys() else Exception("HostFact error."))
         return reply
 
-    def make_invoice(self, debtor_code, invoice_lines, newInvoice=False, attachment=None):
+    def make_invoice(self,
+                     debtor_code: str,
+                     invoice_lines: list,
+                     newInvoice: bool = False,
+                     attachment=None):
         method = HostFactCall(self.url, self.api_key, 'invoice', self.debug)
 
         active_invoices = []
@@ -61,7 +76,7 @@ class HostFactCall(object):
 
         return {"Identifier": invoice_reply['invoice']['Identifier']}
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str):
         if name == "make_invoice":
             if self.controller == "invoice":
                 return self.make_invoice
@@ -72,10 +87,15 @@ class HostFactCall(object):
 
 
 class HostFact(object):
-    def __init__(self, url, api_key, debug=False):      
+    def __init__(self,
+                 url: str,
+                 api_key: str,
+                 transport: Optional[Callable] = None,
+                 timeout: int = 30,
+                 debug: bool = False):
         self.url = url
         self.api_key = api_key
-        self.method = HostFactCall(self.url, self.api_key, debug=debug)
+        self.method = HostFactCall(self.url, self.api_key, transport=transport, timeout=timeout, debug=debug)
 
     def __getattr__(self, name):
         setattr(self.method, "controller", name)
