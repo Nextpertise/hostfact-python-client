@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hostfact-python-client"
-version = "0.1.4"
+version = "0.1.5"
 description = ""
 authors = ["Kamenlom <ivashchenko.roman111@gmail.com>", "Teun Ouwehand <teun@nextpertise.nl>"]
 
