@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "hostfact-python-client"
-version = "0.1.3"
+version = "0.1.4"
 description = ""
-authors = ["Kamenlom <ivashchenko.roman111@gmail.com>"]
+authors = ["Kamenlom <ivashchenko.roman111@gmail.com>", "Teun Ouwehand <teun@nextpertise.nl>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 requests = "^2.25.1"
 vcrpy = "^4.1.1"
 
