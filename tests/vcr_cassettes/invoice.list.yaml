@@ -21,6 +21,8 @@ interactions:
     headers:
       Content-Type:
       - application/json
+    http_version: HTTP/1.1
+    status_code: 200
     status:
       code: 200
       message: OK
