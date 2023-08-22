@@ -34,6 +34,11 @@ class HostFactCall(object):
             # Use the provided transport to make the HTTP request
             response = self.transport.request(self.url, data)
             reply = response.json()
+            if response.status_code != 200:
+                error = f"HostFact error: {response.text}"
+                if self.debug:
+                    print(error)
+                raise Exception(error)
         else:
             try:
                 d = http_build_query(data).encode('ascii')
@@ -41,8 +46,8 @@ class HostFactCall(object):
                     reply = f.read()
                 reply = json.loads(reply.decode('utf-8'))
             except Exception as e:
+                error = f"HostFact error: {e}, {e.file.data.decode()}"
                 if self.debug:
-                    error = f"HostFact error: {e}, {e.file.data.decode()}"
                     print(error)
                 raise Exception(error) from e
 
