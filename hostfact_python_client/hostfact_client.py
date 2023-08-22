@@ -10,10 +10,11 @@ from hostfact_python_client.utilities import http_build_query
 
 
 class HostFactCall(object):
-    def __init__(self, url, api_key, controller=None, debug=False):      
+    def __init__(self, url, api_key, controller=None, timeout=30, debug=False):
         self.url = url
         self.api_key = api_key
         self.controller = controller
+        self.timeout = timeout
         self.debug = debug
 
     def call(self, **kwargs):
@@ -25,13 +26,14 @@ class HostFactCall(object):
         }
         try:
             d = http_build_query(data).encode('ascii')
-            with urllib.request.urlopen(self.url, d, timeout=30) as f:
+            with urllib.request.urlopen(self.url, d, timeout=self.timeout) as f:
                 reply = f.read()
             reply = json.loads(reply.decode('utf-8'))
         except Exception as e:
             if self.debug:
-                print(f"HostFact error: {e}")
-            raise
+                error = f"HostFact error: {e}, {e.file.data.decode()}"
+                print(error)
+            raise Exception(error) from e
 
         if reply['status'] == 'error':
             if self.debug:
@@ -75,8 +77,6 @@ class HostFact(object):
         self.api_key = api_key
         self.method = HostFactCall(self.url, self.api_key, debug=debug)
 
-
     def __getattr__(self, name):
         setattr(self.method, "controller", name)
         return self.method
-        

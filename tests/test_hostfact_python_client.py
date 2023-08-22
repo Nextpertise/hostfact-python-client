@@ -1,12 +1,13 @@
 import vcr
 import base64
+import pytest
 
 from hostfact_python_client.utilities import http_build_query
 
 from hostfact_python_client.hostfact_client import HostFact
 
 
-client = HostFact(url="https://your-hostfact-server.com/Pro/api.php", api_key="secret")
+client = HostFact(url="https://your-hostfact-server.com/Pro/apiv2/api.php", api_key="secret")
 
 
 def test_invoice_list_http_build_query():
@@ -18,7 +19,8 @@ def test_invoice_list_http_build_query():
 
     assert (result == "action=list&controller=invoice&sort=Modified")
 
-@vcr.use_cassette('vcr_cassettes/invoice.list.yaml')
+
+@vcr.use_cassette('tests/vcr_cassettes/invoice.list.yaml')
 def test_invoice_list_http_request():
     
     result = client.invoice.list()
@@ -87,7 +89,7 @@ def test_invoice_list_http_request():
     })
 
 
-@vcr.use_cassette('vcr_cassettes/invoice.make_invoice.yaml')
+@vcr.use_cassette('tests/vcr_cassettes/invoice.make_invoice.yaml')
 def test_make_invoice_http_request():
 
     filename = "test.txt"
@@ -211,4 +213,10 @@ def test_make_invoice_http_request():
             "DiscountAmountExcl": 0
         }
     ])
-    
+
+
+@vcr.use_cassette('tests/vcr_cassettes/failed_invoice.list.yaml')
+def test_with_incorrect_api_key_http_request():
+    with pytest.raises(Exception) as exc_info:
+        client.invoice.list()
+    assert str(exc_info.value) == "HostFact error: ['API key is invalid']"
