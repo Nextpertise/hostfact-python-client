@@ -251,4 +251,6 @@ def test_timeout_in_http_request(client):
 
     with pytest.raises(Exception) as exc_info:
         client.invoice.list()
-    assert str(exc_info.value) == "HostFact error: [Errno 8] nodename nor servname provided, or not known"
+    # Exception message is not the on different platforms
+    assert "HostFact error:" in str(exc_info.value)
+    assert "not known" in str(exc_info.value)
