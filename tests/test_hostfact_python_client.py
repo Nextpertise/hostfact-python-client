@@ -2,15 +2,16 @@ import vcr
 import base64
 import pytest
 import httpx
+import respx
 from hostfact_python_client.utilities import http_build_query
 from hostfact_python_client.hostfact_client import HostFact
 
 
 class HTTPXTransport:
     @staticmethod
-    def request(url: str, data: dict):
+    def request(url: str, data: str, headers: dict = None, timeout: int = 30):
         # Use httpx.request to send the request
-        response = httpx.request("POST", url, data=data)
+        response = httpx.request("POST", url, data=data, headers=headers, timeout=timeout)
 
         # Return the response
         return response
@@ -241,3 +242,13 @@ def test_with_incorrect_api_key_http_request(client):
     with pytest.raises(Exception) as exc_info:
         client.invoice.list()
     assert str(exc_info.value) == "HostFact error: ['API key is invalid']"
+
+
+@pytest.mark.parametrize("client", [native_client_invalid_api_key, transport_client_invalid_api_key])
+def test_timeout_in_http_request(client):
+    # Mock the request to timeout
+    respx.get("https://your-hostfact-server.com/").mock(side_effect=httpx.TimeoutException("Mocked timeout"))
+
+    with pytest.raises(Exception) as exc_info:
+        client.invoice.list()
+    assert str(exc_info.value) == "HostFact error: [Errno 8] nodename nor servname provided, or not known"

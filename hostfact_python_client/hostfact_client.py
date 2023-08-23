@@ -1,5 +1,4 @@
-import json
-import urllib.request
+import httpx
 import os
 import sys
 from typing import Optional, Callable
@@ -30,26 +29,30 @@ class HostFactCall(object):
             "action": self.name,
             **kwargs
         }
-        if self.transport:
-            # Use the provided transport to make the HTTP request
-            response = self.transport.request(self.url, data)
-            reply = response.json()
-            if response.status_code != 200:
-                error = f"HostFact error: {response.text}"
-                if self.debug:
-                    print(error)
-                raise Exception(error)
-        else:
-            try:
-                d = http_build_query(data).encode('ascii')
-                with urllib.request.urlopen(self.url, d, timeout=self.timeout) as f:
-                    reply = f.read()
-                reply = json.loads(reply.decode('utf-8'))
-            except Exception as e:
-                error = f"HostFact error: {e}, {e.file.data.decode()}"
-                if self.debug:
-                    print(error)
-                raise Exception(error) from e
+        d = http_build_query(data)
+        try:
+            if self.transport:
+                # Use the provided transport to make the HTTP request
+                response = self.transport.request(self.url,
+                                                  data=d,
+                                                  headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                                                  timeout=self.timeout)
+            else:
+                response = httpx.post(self.url,
+                                      data=d,
+                                      headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                                      timeout=self.timeout)
+        except Exception as e:
+            if self.debug:
+                print(f"HostFact error: {e}")
+            raise Exception(f"HostFact error: {e}")
+        reply = response.json()
+
+        if response.status_code != 200:
+            error = f"HostFact error: {response.text}"
+            if self.debug:
+                print(error)
+            raise Exception(error)
 
         if reply['status'] == 'error':
             if self.debug:
