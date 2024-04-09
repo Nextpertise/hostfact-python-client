@@ -8,7 +8,7 @@ authors = ["Kamenlom <ivashchenko.roman111@gmail.com>", "Teun Ouwehand <teun@nex
 python = "^3.11"
 requests = "^2.25.1"
 vcrpy = "^4.1.1"
-httpx = "^0.24"
+httpx = "^0.27"
 respx = "^0.20"
 
 [tool.poetry.dev-dependencies]
