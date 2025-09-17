@@ -118,6 +118,7 @@ def test_make_invoice_http_request(client):
 
     result = client.invoice.make_invoice(**{
         "debtor_code": "DB100",
+        "invoice_reference": "PO123456",
         "invoice_lines": [
             {
                 "Description": "test@test.nl",
@@ -131,20 +132,20 @@ def test_make_invoice_http_request(client):
         }
     })
 
-    assert (result == {'Identifier': '9300'})
+    assert (result == {'Identifier': '25683'})
 
     invoice = client.invoice.show(Identifier=result['Identifier'])['invoice']
 
     assert (invoice["Attachments"] == [
         {
-        "Identifier": "49",
+        "Identifier": "17715",
         "Filename": "test.txt"
         }
     ])
     assert (invoice["InvoiceLines"] == [
         {
-        "Identifier": 318661,
-        "Date": "2021-06-18",
+        "Identifier": 351157,
+        "Date": "2025-09-17",
         "Number": "1",
         "NumberSuffix": "",
         "ProductCode": "",
@@ -170,6 +171,7 @@ def test_make_invoice_http_request(client):
 
     result = client.invoice.make_invoice(**{
         "debtor_code": "DB100",
+        "invoice_reference": "PO654321",
         "invoice_lines": [
             {
                 "Description": "Big money",
@@ -182,14 +184,14 @@ def test_make_invoice_http_request(client):
 
     assert (invoice["Attachments"] == [
         {
-        "Identifier": "49",
+        "Identifier": "17715",
         "Filename": "test.txt"
         }
     ])
     assert (invoice["InvoiceLines"] == [
         {
-            "Identifier": 318661,
-            "Date": "2021-06-18",
+            "Identifier": 351157,
+            "Date": "2025-09-17",
             "Number": "1",
             "NumberSuffix": "",
             "ProductCode": "",
@@ -211,8 +213,8 @@ def test_make_invoice_http_request(client):
             "DiscountAmountExcl": 0
         },
         {
-            "Identifier": 318662,
-            "Date": "2021-06-18",
+            "Identifier": 351158,
+            "Date": "2025-09-17",
             "Number": "1",
             "NumberSuffix": "",
             "ProductCode": "",
