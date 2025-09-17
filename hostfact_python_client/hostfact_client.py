@@ -60,11 +60,14 @@ class HostFactCall(object):
             raise Exception(f"HostFact error: {reply['errors']}" if 'errors' in reply.keys() else Exception("HostFact error."))
         return reply
 
-    def make_invoice(self,
-                     debtor_code: str,
-                     invoice_lines: list,
-                     newInvoice: bool = False,
-                     attachment=None):
+    def make_invoice(
+            self,
+            debtor_code: str,
+            invoice_lines: list,
+            newInvoice: bool = False,
+            attachment=None,
+            invoice_reference: str = None
+    ):
         method = HostFactCall(self.url, self.api_key, 'invoice', self.debug)
 
         active_invoices = []
@@ -73,8 +76,13 @@ class HostFactCall(object):
             active_invoices = method.list(searchat="DebtorCode", searchfor=debtor_code, status=0, sort="Modified")
 
         if newInvoice or (not newInvoice and active_invoices['totalresults'] == 0):
-            invoice_reply = method.add(DebtorCode=debtor_code, InvoiceLines=invoice_lines)
+            invoice_reply = method.add(DebtorCode=debtor_code, ReferenceNumber=invoice_reference, InvoiceLines=invoice_lines)
         else:
+            # If an invoice reference is provided, we set it; this means it will also overwrite any reference already
+            # set on the existing invoice with the (new) one provided.
+            if invoice_reference not in (None, ""):
+                method.edit(Identifier=active_invoices['invoices'][0]['Identifier'], ReferenceNumber=invoice_reference)
+
             invoice_line_method = HostFactCall(self.url, self.api_key, 'invoiceline', self.debug)
             invoice_reply = invoice_line_method.add(Identifier=active_invoices['invoices'][0]['Identifier'], InvoiceLines=invoice_lines)
 
